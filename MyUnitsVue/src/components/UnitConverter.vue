@@ -13,7 +13,33 @@ const fromUnitId = ref(props.category.units[0].id)
 const toUnitId = ref(props.category.units[1]?.id || props.category.units[0].id)
 const fromPrefixId = ref('none')
 const toPrefixId = ref('kilo')
-const history = ref([])
+const HISTORY_STORAGE_PREFIX = 'myunits-history-'
+
+function loadHistoryForCategory(categoryId) {
+  if (typeof localStorage === 'undefined') return []
+
+  try {
+    const raw = localStorage.getItem(`${HISTORY_STORAGE_PREFIX}${categoryId}`)
+    if (!raw) return []
+    const parsed = JSON.parse(raw)
+    return Array.isArray(parsed) ? parsed : []
+  } catch (e) {
+    console.error('Error loading history for', categoryId, e)
+    return []
+  }
+}
+
+function saveHistoryForCategory(categoryId, entries) {
+  if (typeof localStorage === 'undefined') return
+
+  try {
+    localStorage.setItem(`${HISTORY_STORAGE_PREFIX}${categoryId}`, JSON.stringify(entries))
+  } catch (e) {
+    console.error('Error saving history for', categoryId, e)
+  }
+}
+
+const history = ref(loadHistoryForCategory(props.category.id) || [])
 const copied = ref(false)
 const isResettingCategory = ref(false)
 let copyTimerId = null
@@ -23,7 +49,7 @@ watch(
   () => props.category,
   (category) => {
     isResettingCategory.value = true
-    history.value = []
+    history.value = loadHistoryForCategory(category.id)
     copied.value = false
     lastLoggedSignature = ''
 
@@ -98,6 +124,12 @@ watch(
 
     lastLoggedSignature = signature
     history.value = [createHistoryEntry(), ...history.value].slice(0, 5)
+    // Persist history for this category so it survives switching views
+    try {
+      saveHistoryForCategory(props.category.id, history.value)
+    } catch (e) {
+      // already logged inside saveHistoryForCategory
+    }
   },
   { flush: 'sync' },
 )
