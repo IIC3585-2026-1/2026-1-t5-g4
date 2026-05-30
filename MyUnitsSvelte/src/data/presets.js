@@ -62,4 +62,13 @@ export const presets = [
     hint: 'Clima internacional',
     convert: (value) => (value - 32) * (5 / 9),
   },
+  {
+    id: 'hectare-acre',
+    group: 'Área',
+    label: 'Hectáreas a Acres',
+    from: 'ha',
+    to: 'ac',
+    hint: 'Terrenos y parcelas',
+    convert: (value) => value * 2.47105,
+  },
 ]
