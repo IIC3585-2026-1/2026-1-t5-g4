@@ -25,8 +25,8 @@ defineProps({
         </ul>
         <p v-if="category.prefixes.length" class="prefix-list">
           Prefijos:
-          <span v-for="prefix in category.prefixes" :key="prefix.id">
-            {{ prefix.symbol || 'base' }}
+          <span v-for="prefix in category.prefixes.filter(prefix => prefix.id !== 'none')" :key="prefix.id">
+            {{ prefix.symbol }}
           </span>
         </p>
       </section>
