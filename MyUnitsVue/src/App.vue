@@ -88,6 +88,39 @@ const categories = [
       { id: 'kelvin', label: 'Kelvin', symbol: 'K', supportsPrefixes: false },
     ],
   },
+  {
+    id: 'area',
+    name: 'Área',
+    description: 'Medidas de superficie estandarizadas.',
+    baseUnit: 'square-meter',
+    prefixes: [],
+    units: [
+      { id: 'square-meter', label: 'Metro cuadrado', symbol: 'm²', factor: 1, supportsPrefixes: false },
+      { id: 'hectare', label: 'Hectárea', symbol: 'ha', factor: 10000, supportsPrefixes: false },
+      { id: 'acre', label: 'Acre', symbol: 'ac', factor: 4046.856, supportsPrefixes: false },
+      { id: 'square-foot', label: 'Pie cuadrado', symbol: 'sq ft', factor: 0.092903, supportsPrefixes: false }
+    ],
+  },
+  {
+    id: 'volume',
+    name: 'Volumen',
+    description: 'Litros, galones y metros cúbicos.',
+    baseUnit: 'liter',
+    prefixes: [
+      { id: 'none', label: 'Sin prefijo', symbol: '', factor: 1 },
+      { id: 'milli', label: 'Mili', symbol: 'm', factor: 0.001 },
+      { id: 'centi', label: 'Centi', symbol: 'c', factor: 0.01 },
+      { id: 'kilo', label: 'Kilo', symbol: 'k', factor: 1000 },
+      { id: 'mega', label: 'Mega', symbol: 'M', factor: 1000 ** 2 },
+      { id: 'giga', label: 'Giga', symbol: 'G', factor: 1000 ** 3 },
+      { id: 'tera', label: 'Tera', symbol: 'T', factor: 1000 ** 4 },
+    ],
+    units: [
+      { id: 'liter', label: 'Litro', symbol: 'L', factor: 1, supportsPrefixes: false },
+      { id: 'gallon', label: 'Galón', symbol: 'gal', factor: 3.785411784, supportsPrefixes: false },
+      { id: 'cubic-meter', label: 'Metro cúbico', symbol: 'm³', factor: 1000, supportsPrefixes: false },
+    ],
+  },
 ]
 
 const selectedCategoryId = ref('data')
@@ -121,7 +154,7 @@ const selectedCategory = computed(() =>
       <section class="converter-panel" aria-labelledby="converter-title">
         <div class="section-heading">
           <p class="eyebrow">Conversor</p>
-          <h2 id="converter-title">Selecciona un area y convierte</h2>
+          <h2 id="converter-title">Selecciona un área y convierte</h2>
         </div>
 
         <div class="category-tabs" aria-label="Categorias de conversion">
@@ -137,7 +170,7 @@ const selectedCategory = computed(() =>
           </button>
         </div>
 
-        <UnitConverter :category="selectedCategory" />
+        <UnitConverter v-if="selectedCategory" :key="selectedCategory.id" :category="selectedCategory" />
       </section>
 
       <SupportedUnits :categories="categories" />
